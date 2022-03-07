@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const configFileName = 'config.json';
+const namingFileName = 'naming.json';
 const imagesDirName = 'images';
 const metadataDirName = 'metadata';
 
@@ -26,9 +27,13 @@ function getAllFileNames(dir) {
 }
 
 function main() {
+
     const configFilePath = path.resolve(__dirname, '..', configFileName);
 
     const config = JSON.parse(fs.readFileSync(configFilePath, 'utf8'));
+
+    const naming = JSON.parse(fs.readFileSync(namingFileName, 'utf8'));
+    
     const collectionName = config.collectionName;
     const description = config.description;
     const baseUri = config.baseUri;
@@ -43,7 +48,9 @@ function main() {
     const metadataDir = path.resolve(__dirname, '..', metadataDirName);
 
     createDirIfNotExists(metadataDir);
-    const fileExtension = path.extname(fileNames[0] || '');
+    // const fileExtension = path.extname(fileNames[0] || '');
+    const fileExtension = '.gif'
+
     // extract filenames without extension
     fileNames = fileNames.map((fileName) => path.parse(fileName).name);
 
@@ -61,7 +68,7 @@ function main() {
                 }
                 createMetadataFile(
                     {
-                        name: `${collectionName} #${sequence}`,
+                        name: `${naming[fileName]}`,
                         description: `${description}`,
                         image: `${baseUri}/${fileName}${fileExtension}`
                     },
